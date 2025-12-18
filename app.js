@@ -2,11 +2,10 @@ const dotenv = require('dotenv');
 const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
 const cors = require('cors');
-const { typeDefs } = require('./src/graphql/schema');
-const { resolvers } = require('./src/graphql/resolver');
-const { connectDB } = require('./src/config/database');
-dotenv.config();
+const { typeDefs, resolvers } = require('./graphql/index');
+const { connectDB } = require('./config/database');
 
+dotenv.config();
 connectDB(process.env.DB_URL);
 
 const app = express();

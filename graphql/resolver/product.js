@@ -1,13 +1,14 @@
-const { add, edit, get, get_all, remove } = require('../mongo_service/product');
+const { add, edit, get, get_all, remove } = require('../../mongo/mongo_service/product');
 
-const resolvers = {
+module.exports = {
+
     Query: {
-        getProductsList: async (parent, args) => {
+        products: async (parent, args) => {
             let query = {};
             const result = await get_all(query, 0, 100);
             return result;
         },
-        getProduct: async (parent, args) => {
+        productDetail: async (parent, args) => {
             const result = await get(args.id);
             return result;
         }
@@ -20,7 +21,7 @@ const resolvers = {
                 category: args.category,
                 product_name: args.productName,
                 price: args.price,
-                colors: args.colors,
+                color: args.color,
                 img_path: args.imgPath
             };
             const result = await edit(args.id, payload);
@@ -31,7 +32,7 @@ const resolvers = {
                 category: args.category,
                 productName: args.productName,
                 price: args.price,
-                colors: args.colors,
+                color: args.color,
                 imgPath: args.imgPath
             };
             
@@ -44,5 +45,3 @@ const resolvers = {
         }
     }
 };
-
-module.exports = { resolvers };

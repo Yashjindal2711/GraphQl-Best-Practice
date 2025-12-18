@@ -2,9 +2,9 @@
   "name": "graphql-best-practice",
   "version": "1.0.0",
   "description": "Every Day try with new way of builiding APi's",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon app.js"
   },
   "repository": {
     "type": "git",
