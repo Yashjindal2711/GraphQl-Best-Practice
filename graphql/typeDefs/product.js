@@ -4,11 +4,11 @@ const product = gql `
 
 type Product {
     id: ID
-    category: String!
-    productName: String!
+    name: String!
     price: Int!
     color: String!
     imgPath: String
+    category: Category
 }
 
 extend type Query {
@@ -17,8 +17,8 @@ extend type Query {
 }
 
 extend type Mutation {
-    updateProduct(id: ID!, category: String!, productName: String!, price: Int!, color: String!, imgPath: String!): Product
-    addProduct(category: String, productName: String!, price: Int, color: String!, imgPath: String): Product
+    updateProduct(id: ID!, categoryId: String!, name: String!, price: Int!, color: String!, imgPath: String!): Product
+    addProduct(categoryId: String, name: String!, price: Int, color: String!, imgPath: String): Product
     deleteProduct(id: ID!): Boolean!
 } `
 

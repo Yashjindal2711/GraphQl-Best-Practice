@@ -1,14 +1,15 @@
 const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 
 const product_schema = new mongoose.Schema({
     
-    category    : { type: String, default: "" },
-    productName : { type: String, default: "" },
-    price       : { type: Number, default: "" },
-    color       : { type: String, default: "" },
-    imgPath     : { type: String, default: "" },
+    categoryId : { type: ObjectId, default: null, ref: "categories" },
+    name        : { type: String,   default: "" },
+    price       : { type: Number,   default: "" },
+    color       : { type: String,   default: "" },
+    imgPath     : { type: String,   default: "" },
 },
 { timestamps: true });
 
-let product = mongoose.model('productlists', product_schema);
+let product = mongoose.model('products', product_schema);
 module.exports = product;

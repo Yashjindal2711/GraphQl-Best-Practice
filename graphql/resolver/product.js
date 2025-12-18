@@ -1,11 +1,12 @@
 const { add, edit, get, get_all, remove } = require('../../mongo/mongo_service/product');
+const { get: get_category } = require('../../mongo/mongo_service/category');
 
-module.exports = {
-
+const resolvers = {
     Query: {
         products: async (parent, args) => {
             let query = {};
-            const result = await get_all(query, 0, 100);
+            let pagination = [{$skip  : 0 }, {$limit:100}]
+            const result = await get_all(query, pagination);
             return result;
         },
         productDetail: async (parent, args) => {
@@ -18,8 +19,8 @@ module.exports = {
         updateProduct: async (parent, args) => {
             console.log("Args in updateProduct:", args);
             const payload = {
-                category: args.category,
-                product_name: args.productName,
+                categoryId: args.categoryId,
+                name: args.name,
                 price: args.price,
                 color: args.color,
                 img_path: args.imgPath
@@ -28,14 +29,7 @@ module.exports = {
             return result;
         },
         addProduct: async (parent, args) => {
-            const payload = {
-                category: args.category,
-                productName: args.productName,
-                price: args.price,
-                color: args.color,
-                imgPath: args.imgPath
-            };
-            
+            const payload = {...args};
             let result = await add(payload);
             return result;
         },
@@ -43,5 +37,17 @@ module.exports = {
             let result = await remove(args.id);
             return result;
         }
+    },
+
+    Product: {
+        category: async (parent) => {
+            console.log('parent =========>', parent);
+            const catId = parent.categoryId;
+            if (!catId) return null;
+            const cat = await get_category(catId);
+            return cat;
+        }
     }
 };
+
+module.exports = { resolvers };

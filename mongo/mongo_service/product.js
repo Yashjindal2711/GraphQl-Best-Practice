@@ -1,3 +1,5 @@
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 const product = require('../mongo_models/product');
 
 const add = (data) => {
@@ -7,23 +9,47 @@ const add = (data) => {
     });
 }
 
-const edit = (id ,data) => {
+const edit = (id, data) => {
     return new Promise((resolve, reject) => {
-        let result = product.findByIdAndUpdate(id, data, {new:true});
+        let result = product.findByIdAndUpdate(id, data, { new: true });
         result.then(resolve).catch(reject);
     });
 }
 
-const get_all = (filter, skip, limit) => {
+const get_all = (filter, pagination) => {
     return new Promise((resolve, reject) => {
-        let result = product.find(filter).sort({createdAt:-1}).skip(skip).limit(limit);
+
+        const pipeline = [
+            { $match: filter },
+            { $sort: { createdAt: -1 } },
+            ...pagination,
+            { $lookup: {
+                from: 'categories',
+                localField: 'categoryId',
+                foreignField: '_id',
+                as: 'category'
+            }},
+            { $unwind: { path: '$category', preserveNullAndEmptyArrays: true } }
+        ];
+
+        let result = product.aggregate(pipeline);
         result.then(resolve).catch(reject);
     });
 }
 
 const get = (id) => {
     return new Promise((resolve, reject) => {
-        let result = product.findById(id);
+        const pipeline = [
+            { $match: { _id: ObjectId(id) } },
+            { $lookup: { 
+                from: 'categories', 
+                localField: 'categoryId', 
+                foreignField: '_id', 
+                as: 'category' 
+            }},
+            { $unwind: { path: '$category', preserveNullAndEmptyArrays: true } }
+        ];
+        let result = product.aggregate(pipeline);
         result.then(resolve).catch(reject);
     });
 }
